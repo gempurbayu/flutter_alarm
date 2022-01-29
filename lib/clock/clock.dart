@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_alarm_gempur/clock/hand_minute.dart';
 
 import 'clock_painter.dart';
+import 'hand_hour.dart';
 
 class Clock extends StatefulWidget {
   const Clock({Key? key}) : super(key: key);
@@ -57,6 +59,8 @@ class _ClockState extends State<Clock> with TickerProviderStateMixin {
                 ),
               ),
             ),
+            MinuteHand(),
+            HourHand(),
           ],
         )
       ],
