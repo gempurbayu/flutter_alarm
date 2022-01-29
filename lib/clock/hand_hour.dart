@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../bloc/hour/h_bloc.dart';
 
 class HourHand extends StatefulWidget {
   const HourHand({Key? key}) : super(key: key);
@@ -71,6 +73,7 @@ class _HourHandState extends State<HourHand>
       var a = degree < 360 ? degree.roundToDouble() : degree - 360;
       var degrees = roundToBase(a.roundToDouble(), 10);
       _valueChoose = degrees ~/ 30 == 12 ? 0 : degrees ~/ 30;
+      BlocProvider.of<HourBloc>(context).add(SetHour(_valueChoose));
     });
   }
 

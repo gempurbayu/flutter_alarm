@@ -4,7 +4,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../clock/clock.dart';
+import '../bloc/hour/h_bloc.dart';
+import '../bloc/minute/m_bloc.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -19,6 +23,9 @@ class _HomeState extends State<Home> {
   bool isAM = true;
   List<bool> isSelected = List.generate(2, (index) => false);
 
+  String hour = '0';
+  String minute = '0';
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +38,17 @@ class _HomeState extends State<Home> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Stockbit Alarm',
+                  'Stockbit ',
                   style: TextStyle(
-                    color: isOn ? Colors.green : Colors.white,
+                    color: Colors.green,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 40,
+                  ),
+                ),
+                Text(
+                  'Alarm',
+                  style: TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 40,
                   ),
@@ -45,11 +60,23 @@ class _HomeState extends State<Home> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("00",
-                style: TextStyle(
+                BlocBuilder<HourBloc, HourState>(
+                  builder: (context, state) {
+                    Future.delayed(Duration.zero, () {
+                      if (state is LoadedHour) {
+                        setState(() {
+                          hour = state.hour;
+                        });
+                      }
+                    });
+                    return Text(state is LoadedHour ? state.hour : '00',
+                      style: TextStyle(
                         fontSize: 54, 
                         fontWeight: FontWeight.bold, 
-                        color: isOn ? Colors.green : Colors.white)
+                        color: isOn ? Colors.green : Colors.white
+                      ),
+                    );
+                  },
                 ),
                 SizedBox(
                   width: 5,
@@ -62,11 +89,23 @@ class _HomeState extends State<Home> {
                 SizedBox(
                   width: 5,
                 ),
-                Text("00",
-                style: TextStyle(
-                        fontSize: 54, 
+                BlocBuilder<MinuteBloc, MinuteState>(
+                  builder: (context, state) {
+                    Future.delayed(Duration.zero, () {
+                      if (state is LoadedMinute) {
+                        setState(() {
+                          minute = state.minute;
+                        });
+                      }
+                    });
+                    return Text(state is LoadedMinute ? state.minute : '00',
+                      style: TextStyle(
+                          fontSize: 54, 
                         fontWeight: FontWeight.bold, 
-                        color: isOn ? Colors.green : Colors.white)
+                        color: isOn ? Colors.green : Colors.white
+                      )
+                    );
+                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),

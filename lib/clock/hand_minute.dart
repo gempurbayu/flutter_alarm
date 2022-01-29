@@ -3,6 +3,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/minute/m_bloc.dart';
 
 class MinuteHand extends StatefulWidget {
   const MinuteHand({Key? key}) : super(key: key);
@@ -72,6 +75,8 @@ class _MinuteHandState extends State<MinuteHand>
       var a = degree < 360 ? degree.roundToDouble() : degree - 360;
       var degrees = roundToBase(a.roundToDouble(), 10);
       _valueChoose = degrees ~/ 6 == 60 ? 0 : degrees ~/ 6;
+      BlocProvider.of<MinuteBloc>(context).add(SetMinute(_valueChoose));
+
     });
   }
 
