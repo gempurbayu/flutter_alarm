@@ -1,7 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import '../clock/clock.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -20,45 +23,23 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: isOn ? Colors.green : Colors.white,
-        centerTitle: true,
-        title: Text(
-          'Stockbit Alarm',
-          style: TextStyle(
-            color: isOn ? Color(0xffffffff) : Colors.green,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        elevation: 0,
-      ),
+      backgroundColor: Color(0xff001402),
       body: Column(
         children: [
-          Padding(padding: const EdgeInsets.only(top: 80),
+          Padding(padding: const EdgeInsets.only(top: 100),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center ,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Transform.scale(
-                  scale: 1.2,
-                  child: FlutterSwitch(
-                    value: isOn,
-                    activeColor: Color(0xff65D1BA),
-                    inactiveColor: Colors.redAccent,
-                    showOnOff: true,
-                    onToggle: (value) {
-                      setState(() {
-                        isOn = value;
-                        if (isOn) {
-                          Text("Your Alarm is On");
-                        } else {
-                          Text("Your Alarm is Off");
-                        }
-                      });
-                    }
+                Text(
+                  'Stockbit Alarm',
+                  style: TextStyle(
+                    color: isOn ? Colors.green : Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 40,
                   ),
                 ),
               ],
-            ),  
+            ),
           ),
           Padding(padding: const EdgeInsets.only(top: 30),
             child: Row(
@@ -68,7 +49,7 @@ class _HomeState extends State<Home> {
                 style: TextStyle(
                         fontSize: 54, 
                         fontWeight: FontWeight.bold, 
-                        color: isOn ? Colors.green : Colors.black)
+                        color: isOn ? Colors.green : Colors.white)
                 ),
                 SizedBox(
                   width: 5,
@@ -76,7 +57,7 @@ class _HomeState extends State<Home> {
                 Text(":",
                   style: TextStyle(fontSize: 54, 
                   fontWeight: FontWeight.bold, 
-                  color: isOn ? Colors.green : Colors.black),
+                  color: isOn ? Colors.green : Colors.white),
                 ),
                 SizedBox(
                   width: 5,
@@ -85,12 +66,13 @@ class _HomeState extends State<Home> {
                 style: TextStyle(
                         fontSize: 54, 
                         fontWeight: FontWeight.bold, 
-                        color: isOn ? Colors.green : Colors.black)
+                        color: isOn ? Colors.green : Colors.white)
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: ToggleButtons(
                     selectedColor: Color(0xff65D1BA),
+                    color: Colors.white,
                     children: const [
                       Text(
                         'AM',
@@ -125,6 +107,33 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
+          ),
+          Clock(),
+          Padding(padding: const EdgeInsets.only(top: 60),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center ,
+              children: [
+                Transform.scale(
+                  scale: 1.2,
+                  child: FlutterSwitch(
+                    value: isOn,
+                    activeColor: Color(0xff65D1BA),
+                    inactiveColor: Colors.redAccent,
+                    showOnOff: true,
+                    onToggle: (value) {
+                      setState(() {
+                        isOn = value;
+                        if (isOn) {
+                          Text("Your Alarm is On");
+                        } else {
+                          Text("Your Alarm is Off");
+                        }
+                      });
+                    }
+                  ),
+                ),
+              ],
+            ),  
           ),
         ],
       ),
