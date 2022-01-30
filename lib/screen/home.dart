@@ -5,10 +5,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
+
 
 import '../clock/clock.dart';
 import '../bloc/hour/h_bloc.dart';
 import '../bloc/minute/m_bloc.dart';
+import '../notification.dart';
+import '../charts.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -26,10 +31,74 @@ class _HomeState extends State<Home> {
   String hour = '0';
   String minute = '0';
 
+  @override
+  void initState() {
+    super.initState();
+    Notif.init();
+    listenNotification();
+    isSelected[0] = true;
+  }
+
+  void listenNotification() =>
+      Notif.onNotification.stream.listen(onClickNotification);
+
+  void onClickNotification(String? payload) {
+    showModalBottomSheet<void>(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      context: context,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: BCharts(
+            data: [
+              TimeOpen(
+                payload,
+                DateTime.now().difference(DateTime.parse(payload!)).inSeconds,
+                charts.ColorUtil.fromDartColor(
+                  Color(0xff65D1BA),
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void showSnackBar() {
+    String formattedDate = DateFormat('yyyy-MM-dd  hh:mm a').format(
+      setDateTime(),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Alarm active for $formattedDate'),
+      ),
+    );
+  }
+
+  DateTime setDateTime() {
+    DateTime now = DateTime.now();
+    return DateTime(
+        now.year,
+        now.month,
+        now.hour > (isAM ? int.parse(hour) : int.parse(hour) + 12)
+            ? now.day + 1
+            : now.hour == (isAM ? int.parse(hour) : int.parse(hour) + 12) &&
+                    now.minute >= int.parse(minute) &&
+                    now.second > 0
+                ? now.day + 1
+                : now.day,
+        isAM? int.parse(hour) : int.parse(hour) + 12,
+        int.parse(minute));
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(preferredSize: Size.fromHeight(1),
+      child: AppBar(),),
       backgroundColor: Color(0xff001402),
       body: Column(
         children: [
@@ -163,9 +232,21 @@ class _HomeState extends State<Home> {
                       setState(() {
                         isOn = value;
                         if (isOn) {
-                          Text("Your Alarm is On");
+                          Notif.showNotificationSchedule(
+                              title: 'Alarm App',
+                              body: 'Your alarm is active',
+                              payload: setDateTime().toString(),
+                              scheduleDate: setDateTime());
+                          Future.delayed(
+                              Duration(
+                                  seconds: setDateTime()
+                                      .difference(DateTime.now())
+                                      .inSeconds), () {
+                            isOn = false;
+                          });
+                          showSnackBar();
                         } else {
-                          Text("Your Alarm is Off");
+                          Notif.cancel();
                         }
                       });
                     }

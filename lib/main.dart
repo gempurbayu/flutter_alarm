@@ -3,12 +3,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 import './bloc/hour/h_bloc.dart';
 import './bloc/minute/m_bloc.dart';
 import './screen/home.dart';
 
 void main() {
+  tz.initializeTimeZones();
   runApp(MultiBlocProvider(providers: [
     BlocProvider<HourBloc>(
       create: (context) => HourBloc(),
